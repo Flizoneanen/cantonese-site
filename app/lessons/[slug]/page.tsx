@@ -69,9 +69,9 @@ export default async function LessonPage({
       <h1 className="mb-6 text-4xl font-bold">{title}</h1>
 
       <div className="grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {vocab.map((word) => (
+        {vocab.map((word, index) => (
           <div
-            key={`${word.traditional}-${word.jyutping}`}
+            key={`${word.traditional}-${word.jyutping}-${index}`}
             className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md"
           >
             <div className="mb-4 text-center text-5xl font-bold">

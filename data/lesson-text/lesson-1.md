@@ -133,3 +133,14 @@ Example:
 ### Starting a polite question
 
 **請問...** `cing2 man6 ...`
+
+---
+
+## Side Note for Mandarin Speakers
+
+Some common Cantonese words in this lesson have close Mandarin equivalents:
+
+- **乜嘢 (mat1 je5)** ≈ **什么 (shénme)**
+- **名 (meng2)** ≈ **名字 (míngzi)**
+
+Many basic words and sentence patterns will feel familiar, although the pronunciation is often very different.
