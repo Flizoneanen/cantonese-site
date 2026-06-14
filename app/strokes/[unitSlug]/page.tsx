@@ -1,10 +1,9 @@
-
-
 import fs from "fs";
 import path from "path";
 import Papa from "papaparse";
 import Link from "next/link";
 import StrokeOrder from "@/app/components/StrokeOrder";
+import AudioButton from "@/app/components/AudioButton";
 
 type LessonRow = {
   unit: string;
@@ -21,6 +20,7 @@ type VocabRow = {
 
 type VocabWithLesson = VocabRow & {
   lessonTitle: string;
+  lessonSlug: string;
 };
 
 function unitToSlug(unit: string) {
@@ -84,12 +84,16 @@ export default async function StrokeUnitPage({
       .map((word) => ({
         ...word,
         lessonTitle: lesson.title,
+        lessonSlug: lesson.slug,
       }));
   });
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <Link href="/strokes" className="mb-6 inline-block text-blue-600 hover:underline">
+      <Link
+        href="/strokes"
+        className="mb-6 inline-block text-blue-600 hover:underline"
+      >
         ← Back to stroke units
       </Link>
 
@@ -112,18 +116,24 @@ export default async function StrokeUnitPage({
               <h2 className="text-5xl font-bold">{word.traditional}</h2>
               <p className="mt-2 text-xl text-gray-700">{word.jyutping}</p>
               <p className="mt-1 text-gray-500">{word.english}</p>
+
+              <div className="mt-4">
+                <AudioButton src={`/audio/${word.lessonSlug}/${word.traditional}.mp3`} />
+              </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              {getUniqueCharacters(word.traditional).map((character, characterIndex) => (
-                <div
-                  key={`${word.traditional}-${character}-${characterIndex}`}
-                  className="rounded-2xl bg-gray-50 p-4 text-center"
-                >
-                  <div className="mb-3 text-3xl font-bold">{character}</div>
-                  <StrokeOrder character={character} />
-                </div>
-              ))}
+              {getUniqueCharacters(word.traditional).map(
+                (character, characterIndex) => (
+                  <div
+                    key={`${word.traditional}-${character}-${characterIndex}`}
+                    className="rounded-2xl bg-gray-50 p-4 text-center"
+                  >
+                    <div className="mb-3 text-3xl font-bold">{character}</div>
+                    <StrokeOrder character={character} />
+                  </div>
+                )
+              )}
             </div>
           </div>
         ))}

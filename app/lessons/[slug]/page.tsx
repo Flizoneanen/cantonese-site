@@ -4,6 +4,8 @@ import Papa from "papaparse";
 import Link from "next/link";
 import VocabQuiz from "@/app/components/VocabQuiz";
 import LessonMarkdown from "@/app/components/LessonMarkdown";
+import AudioButton from "@/app/components/AudioButton";
+
 
 type VocabRow = {
   traditional: string;
@@ -12,10 +14,15 @@ type VocabRow = {
 };
 
 type LessonRow = {
+  unit: string;
   slug: string;
   title: string;
   description: string;
 };
+
+function unitToSlug(unit: string) {
+  return unit.trim().toLowerCase().replace(/\s+/g, "-");
+}
 
 export default async function LessonPage({
   params,
@@ -34,6 +41,8 @@ export default async function LessonPage({
 
   const lessonInfo = lessonsParsed.data.find((lesson) => lesson.slug === slug);
   const title = lessonInfo?.title ?? slug;
+  const unitHref = lessonInfo ? `/units/${unitToSlug(lessonInfo.unit)}` : "/units";
+  const unitLabel = lessonInfo?.unit ?? "Units";
 
   const filePath = path.join(process.cwd(), "data", "vocab", `${slug}.csv`);
   const lessonTextPath = path.join(
@@ -62,8 +71,8 @@ export default async function LessonPage({
 
   return (
     <main className="min-h-screen bg-gray-50 p-10">
-      <Link href="/" className="mb-6 inline-block text-blue-600 hover:underline">
-        ← Back to lessons
+      <Link href={unitHref} className="mb-6 inline-block text-blue-600 hover:underline">
+        ← Back to {unitLabel}
       </Link>
 
       <h1 className="mb-6 text-4xl font-bold">{title}</h1>
@@ -83,13 +92,17 @@ export default async function LessonPage({
             </div>
 
             <div className="text-center text-gray-500">{word.english}</div>
+
+            <div className="mt-4 flex justify-center">
+              <AudioButton src={`/audio/${slug}/${word.traditional}.mp3`} />
+            </div>
           </div>
         ))}
       </div>
 
       <VocabQuiz vocab={vocab} />
 
-      {lessonText && <LessonMarkdown lessonText={lessonText} />}
+      {lessonText && <LessonMarkdown lessonText={lessonText} lessonSlug={slug} />}
     </main>
   );
 }

@@ -5,6 +5,7 @@ One of the first things you'll learn in Cantonese is how to introduce yourself a
 A very common phrase is:
 
 **你叫乜嘢名？** `nei5 giu3 mat1 je5 meng2?`
+[audio:ask-name|你叫乜嘢名？]
 
 > What is your name?
 
@@ -30,8 +31,11 @@ To tell someone your name, use:
 Examples:
 
 - **我叫阿明。** `ngo5 giu3 aa3 ming4`
+  [audio:my-name-is-ming|我叫阿明。]
 - **我叫阿美。** `ngo5 giu3 aa3 mei5`
+  [audio:my-name-is-mei|我叫阿美。]
 - **我叫陳大文。** `ngo5 giu3 can4 daai6 man4`
+  [audio:my-name-is-chan|我叫陳大文。]
 
 This is one of the most important beginner sentence patterns in Cantonese.
 
@@ -60,6 +64,7 @@ Example:
 Notice that:
 
 **你呢？** `nei5 ne1?`
+[audio:what-about-you|你呢？]
 
 is extremely common in everyday Cantonese and should be memorized early.
 
@@ -85,6 +90,7 @@ Together, **請問** means:
 Example:
 
 **請問，你叫乜嘢名？** `cing2 man6, nei5 giu3 mat1 je5 meng2?`
+[audio:polite-ask-name|請問，你叫乜嘢名？]
 
 (May I ask what your name is?)
 
@@ -93,26 +99,35 @@ Example:
 ## Dialogue 1
 
 **A:** 你好。 `nei5 hou2`
+[audio:dialogue1-hello-a|你好。]
 
 **B:** 你好。 `nei5 hou2`
+[audio:dialogue1-hello-b|你好。]
 
 **A:** 你叫乜嘢名？ `nei5 giu3 mat1 je5 meng2?`
+[audio:dialogue1-ask-name|你叫乜嘢名？]
 
 **B:** 我叫阿美。你呢？ `ngo5 giu3 aa3 mei5. nei5 ne1?`
+[audio:dialogue1-mei-what-about-you|我叫阿美。你呢？]
 
 **A:** 我叫阿明。 `ngo5 giu3 aa3 ming4`
+[audio:dialogue1-ming|我叫阿明。]
 
 ---
 
 ## Dialogue 2
 
 **A:** 你好。請問，你叫乜嘢名？
+[audio:dialogue2-hello-ask-name|你好。請問，你叫乜嘢名？]
 
 **B:** 我叫陳小玲。
+[audio:dialogue2-my-name-is-siu-ling|我叫陳小玲。]
 
 **A:** 好高興認識你。
+[audio:dialogue2-nice-to-meet-you|好高興認識你。]
 
 **B:** 我都好高興認識你。
+[audio:dialogue2-me-too|我都好高興認識你。]
 
 ---
 
