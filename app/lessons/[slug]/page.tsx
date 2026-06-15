@@ -39,10 +39,36 @@ export default async function LessonPage({
     skipEmptyLines: true,
   });
 
-  const lessonInfo = lessonsParsed.data.find((lesson) => lesson.slug === slug);
+  const lessons = lessonsParsed.data.filter(
+    (lesson) => lesson.unit && lesson.slug && lesson.title
+  );
+
+  const lessonInfo = lessons.find((lesson) => lesson.slug === slug);
+  const lessonIndex = lessons.findIndex((lesson) => lesson.slug === slug);
+
+  const previousLesson = lessonIndex > 0 ? lessons[lessonIndex - 1] : null;
+  const nextLesson =
+    lessonIndex >= 0 && lessonIndex < lessons.length - 1
+      ? lessons[lessonIndex + 1]
+      : null;
+
   const title = lessonInfo?.title ?? slug;
   const unitHref = lessonInfo ? `/units/${unitToSlug(lessonInfo.unit)}` : "/units";
   const unitLabel = lessonInfo?.unit ?? "Units";
+
+  const unitLessons = lessonInfo
+    ? lessons.filter((lesson) => lesson.unit === lessonInfo.unit)
+    : [];
+
+  const unitLessonIndex = unitLessons.findIndex(
+    (lesson) => lesson.slug === slug
+  );
+
+  const lessonNumberInUnit = unitLessonIndex >= 0 ? unitLessonIndex + 1 : 1;
+  const totalLessonsInUnit = unitLessons.length || 1;
+  const progressPercentage = Math.round(
+    (lessonNumberInUnit / totalLessonsInUnit) * 100
+  );
 
   const filePath = path.join(process.cwd(), "data", "vocab", `${slug}.csv`);
   const lessonTextPath = path.join(
@@ -75,7 +101,27 @@ export default async function LessonPage({
         ← Back to {unitLabel}
       </Link>
 
-      <h1 className="mb-6 text-4xl font-bold">{title}</h1>
+      <section className="mb-8 max-w-5xl rounded-3xl bg-white p-8 shadow-sm">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+              {unitLabel}
+            </p>
+            <h1 className="mt-1 text-4xl font-bold">{title}</h1>
+          </div>
+
+          <div className="rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600">
+            Lesson {lessonNumberInUnit} of {totalLessonsInUnit}
+          </div>
+        </div>
+
+        <div className="h-3 overflow-hidden rounded-full bg-gray-100">
+          <div
+            className="h-full rounded-full bg-black"
+            style={{ width: `${progressPercentage}%` }}
+          />
+        </div>
+      </section>
 
       <div className="grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {vocab.map((word, index) => (
@@ -100,9 +146,35 @@ export default async function LessonPage({
         ))}
       </div>
 
-      <VocabQuiz vocab={vocab} />
+      <VocabQuiz vocab={vocab} lessonSlug={slug} />
 
       {lessonText && <LessonMarkdown lessonText={lessonText} lessonSlug={slug} />}
+
+      <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-between">
+        {previousLesson ? (
+          <Link
+            href={`/lessons/${previousLesson.slug}`}
+            className="rounded-2xl border bg-white p-5 shadow-sm hover:bg-gray-50"
+          >
+            <div className="text-sm text-gray-500">Previous Lesson</div>
+            <div className="font-semibold">← {previousLesson.title}</div>
+          </Link>
+        ) : (
+          <div />
+        )}
+
+        {nextLesson ? (
+          <Link
+            href={`/lessons/${nextLesson.slug}`}
+            className="rounded-2xl border bg-white p-5 text-right shadow-sm hover:bg-gray-50"
+          >
+            <div className="text-sm text-gray-500">Next Lesson</div>
+            <div className="font-semibold">{nextLesson.title} →</div>
+          </Link>
+        ) : (
+          <div />
+        )}
+      </div>
     </main>
   );
 }

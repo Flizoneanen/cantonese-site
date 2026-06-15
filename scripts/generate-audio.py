@@ -3,16 +3,21 @@ import re
 import subprocess
 from pathlib import Path
 
-VOICE = "zh-HK-HiuMaanNeural"
+DEFAULT_VOICE = "zh-HK-HiuMaanNeural"
+SPEAKER_VOICES = {
+    "A": "zh-HK-WanLungNeural",
+    "B": "zh-HK-HiuMaanNeural",
+}
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 VOCAB_DIR = PROJECT_ROOT / "data" / "vocab"
 AUDIO_DIR = PROJECT_ROOT / "public" / "audio"
 LESSON_TEXT_DIR = PROJECT_ROOT / "data" / "lesson-text"
 AUDIO_PATTERN = re.compile(r"\[audio:([^|\]]+)\|([^\]]+)\]")
+DIALOGUE_PATTERN = re.compile(r"\[dialogue:([^|\]]+)\|([^|\]]+)\|([^|\]]+)\|([^\]]+)\]")
 
 
-def generate_audio(text: str, output_path: Path) -> None:
+def generate_audio(text: str, output_path: Path, voice: str = DEFAULT_VOICE) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     if output_path.exists():
@@ -25,7 +30,7 @@ def generate_audio(text: str, output_path: Path) -> None:
         [
             "edge-tts",
             "--voice",
-            VOICE,
+            voice,
             "--text",
             text,
             "--write-media",
@@ -66,6 +71,13 @@ def generate_audio_from_markdown(md_path: Path) -> None:
     for file_name, text in matches:
         output_path = AUDIO_DIR / lesson_slug / f"{file_name}.mp3"
         generate_audio(text.strip(), output_path)
+
+    dialogue_matches = DIALOGUE_PATTERN.findall(content)
+
+    for speaker, file_name, _jyutping, text in dialogue_matches:
+        output_path = AUDIO_DIR / lesson_slug / f"{file_name}.mp3"
+        voice = SPEAKER_VOICES.get(speaker.strip().upper(), DEFAULT_VOICE)
+        generate_audio(text.strip(), output_path, voice)
 
 
 def main() -> None:

@@ -11,18 +11,25 @@ type LessonMarkdownProps = {
 
 type LessonPart =
   | { type: "markdown"; content: string }
-  | { type: "audio"; fileName: string; text: string };
+  | { type: "audio"; fileName: string; text: string }
+  | {
+      type: "dialogue";
+      speaker: string;
+      fileName: string;
+      jyutping: string;
+      text: string;
+      english: string;
+    };
 
-const audioPattern = /\[audio:([^|\]]+)\|([^\]]+)\]/g;
+const lessonTagPattern =
+  /\[(audio):([^|\]]+)\|([^\]]+)\]|\[(dialogue):([^|\]]+)\|([^|\]]+)\|([^|\]]+)\|([^|\]]+)\|([^\]]+)\]/g;
 
 function splitLessonText(lessonText: string): LessonPart[] {
   const parts: LessonPart[] = [];
   let lastIndex = 0;
 
-  for (const match of lessonText.matchAll(audioPattern)) {
+  for (const match of lessonText.matchAll(lessonTagPattern)) {
     const fullMatch = match[0];
-    const fileName = match[1];
-    const text = match[2];
     const matchIndex = match.index ?? 0;
 
     if (matchIndex > lastIndex) {
@@ -32,11 +39,22 @@ function splitLessonText(lessonText: string): LessonPart[] {
       });
     }
 
-    parts.push({
-      type: "audio",
-      fileName,
-      text,
-    });
+    if (match[1] === "audio") {
+      parts.push({
+        type: "audio",
+        fileName: match[2],
+        text: match[3],
+      });
+    } else if (match[4] === "dialogue") {
+      parts.push({
+        type: "dialogue",
+        speaker: match[5],
+        fileName: match[6],
+        jyutping: match[7],
+        text: match[8],
+        english: match[9],
+      });
+    }
 
     lastIndex = matchIndex + fullMatch.length;
   }
@@ -120,6 +138,44 @@ export default function LessonMarkdown({
           return (
             <div key={`${part.fileName}-${index}`} className="mb-5">
               <AudioButton src={`/audio/${lessonSlug}/${part.fileName}.mp3`} />
+            </div>
+          );
+        }
+
+        if (part.type === "dialogue") {
+          const isSpeakerA = part.speaker.trim().toUpperCase() === "A";
+
+          return (
+            <div
+              key={`${part.fileName}-${index}`}
+              className={`mb-5 flex ${isSpeakerA ? "justify-start" : "justify-end"}`}
+            >
+              <div
+                className={`max-w-xl rounded-3xl p-5 shadow-sm ${
+                  isSpeakerA ? "bg-gray-100" : "bg-black text-white"
+                }`}
+              >
+                <div className={`mb-2 text-sm font-semibold ${isSpeakerA ? "text-gray-500" : "text-gray-300"}`}>
+                  Speaker {part.speaker.trim().toUpperCase()}
+                </div>
+
+                <div className="mb-2 text-2xl font-bold">{part.text}</div>
+
+                {showJyutping && (
+                  <div className={`mb-4 font-mono text-sm ${isSpeakerA ? "text-gray-600" : "text-gray-300"}`}>
+                    {part.jyutping}
+                  </div>
+                )}
+                <div
+                  className={`mb-4 text-sm italic ${
+                    isSpeakerA ? "text-gray-600" : "text-gray-300"
+                  }`}
+                >
+                  {part.english}
+                </div>
+
+                <AudioButton src={`/audio/${lessonSlug}/${part.fileName}.mp3`} />
+              </div>
             </div>
           );
         }

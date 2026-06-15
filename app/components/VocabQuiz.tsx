@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import AudioButton from "@/app/components/AudioButton";
 
 type VocabRow = {
   traditional: string;
@@ -10,9 +11,14 @@ type VocabRow = {
 
 type VocabQuizProps = {
   vocab: VocabRow[];
+  lessonSlug: string;
 };
 
-type QuizMode = "character-to-english" | "character-to-jyutping" | "english-to-character";
+type QuizMode =
+  | "character-to-english"
+  | "character-to-jyutping"
+  | "english-to-character"
+  | "audio-to-character";
 
 function shuffleArray<T>(items: T[]): T[] {
   return [...items].sort(() => Math.random() - 0.5);
@@ -21,23 +27,28 @@ function shuffleArray<T>(items: T[]): T[] {
 function getCorrectAnswer(word: VocabRow, mode: QuizMode): string {
   if (mode === "character-to-jyutping") return word.jyutping;
   if (mode === "english-to-character") return word.traditional;
+  if (mode === "audio-to-character") return word.traditional;
   return word.english;
 }
 
 function getPromptLabel(mode: QuizMode): string {
   if (mode === "character-to-jyutping") return "What is the Jyutping?";
   if (mode === "english-to-character") return "Which character/word matches this English?";
+  if (mode === "audio-to-character") return "Listen and choose the correct character/word";
   return "What does this mean?";
 }
 
-export default function VocabQuiz({ vocab }: VocabQuizProps) {
-  const [questionIndex, setQuestionIndex] = useState(0);
+export default function VocabQuiz({ vocab, lessonSlug }: VocabQuizProps) {
+  const [questionOrder, setQuestionOrder] = useState<number[]>(() =>
+    shuffleArray(vocab.map((_word, index) => index))
+  );
+  const [questionPosition, setQuestionPosition] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [quizMode, setQuizMode] = useState<QuizMode>("character-to-english");
   const [showJyutping, setShowJyutping] = useState(true);
 
-  const currentWord = vocab[questionIndex];
+  const currentWord = vocab[questionOrder[questionPosition]];
 
   const answerChoices = useMemo(() => {
     if (!currentWord) return [];
@@ -74,14 +85,23 @@ export default function VocabQuiz({ vocab }: VocabQuizProps) {
 
   function handleNextQuestion() {
     setSelectedAnswer(null);
-    setQuestionIndex((previousIndex) =>
-      previousIndex + 1 >= vocab.length ? 0 : previousIndex + 1
-    );
+
+    if (questionPosition + 1 >= questionOrder.length) {
+      setQuestionOrder(
+        shuffleArray(vocab.map((_word, index) => index))
+      );
+      setQuestionPosition(0);
+    } else {
+      setQuestionPosition((previousPosition) => previousPosition + 1);
+    }
   }
 
   function handleModeChange(mode: QuizMode) {
     setQuizMode(mode);
-    setQuestionIndex(0);
+    setQuestionOrder(
+      shuffleArray(vocab.map((_word, index) => index))
+    );
+    setQuestionPosition(0);
     setSelectedAnswer(null);
     setScore(0);
   }
@@ -94,7 +114,8 @@ export default function VocabQuiz({ vocab }: VocabQuizProps) {
           <p className="text-gray-600">Score: {score} / {vocab.length}</p>
         </div>
 
-        {quizMode !== "character-to-jyutping" && (
+        {quizMode !== "character-to-jyutping" &&
+          quizMode !== "audio-to-character" && (
           <button
             type="button"
             onClick={() => setShowJyutping((currentValue) => !currentValue)}
@@ -105,7 +126,7 @@ export default function VocabQuiz({ vocab }: VocabQuizProps) {
         )}
       </div>
 
-      <div className="mb-6 grid gap-2 sm:grid-cols-3">
+      <div className="mb-6 grid gap-2 sm:grid-cols-4">
         <button
           type="button"
           onClick={() => handleModeChange("character-to-english")}
@@ -135,6 +156,18 @@ export default function VocabQuiz({ vocab }: VocabQuizProps) {
         >
           English → Character
         </button>
+
+        <button
+          type="button"
+          onClick={() => handleModeChange("audio-to-character")}
+          className={`rounded-xl border p-3 text-sm hover:bg-gray-100 ${
+            quizMode === "audio-to-character"
+              ? "bg-black text-white hover:bg-black"
+              : ""
+          }`}
+        >
+          Audio → Character
+        </button>
       </div>
 
       <div className="mb-6 rounded-xl bg-gray-50 p-6 text-center">
@@ -142,6 +175,12 @@ export default function VocabQuiz({ vocab }: VocabQuizProps) {
 
         {quizMode === "english-to-character" ? (
           <p className="mb-2 text-4xl font-bold">{currentWord.english}</p>
+        ) : quizMode === "audio-to-character" ? (
+          <div className="flex justify-center">
+            <AudioButton
+              src={`/audio/${lessonSlug}/${currentWord.traditional}.mp3`}
+            />
+          </div>
         ) : (
           <>
             <p className="mb-2 text-6xl font-bold">{currentWord.traditional}</p>

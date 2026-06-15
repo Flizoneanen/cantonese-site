@@ -98,37 +98,27 @@ Example:
 
 ## Dialogue 1
 
-**A:** 你好。 `nei5 hou2`
-[audio:dialogue1-hello-a|你好。]
+[dialogue:A|dialogue1-hello-a|nei5 hou2|你好。| Hello.]
 
-**B:** 你好。 `nei5 hou2`
-[audio:dialogue1-hello-b|你好。]
+[dialogue:B|dialogue1-hello-b|nei5 hou2|你好。| Hello]
 
-**A:** 你叫乜嘢名？ `nei5 giu3 mat1 je5 meng2?`
-[audio:dialogue1-ask-name|你叫乜嘢名？]
+[dialogue:A|dialogue1-ask-name|nei5 giu3 mat1 je5 meng2?|你叫乜嘢名| What is your name？]
 
-**B:** 我叫阿美。你呢？ `ngo5 giu3 aa3 mei5. nei5 ne1?`
-[audio:dialogue1-mei-what-about-you|我叫阿美。你呢？]
+[dialogue:B|dialogue1-mei-what-about-you|ngo5 giu3 aa3 mei5. nei5 ne1?|我叫阿美。你呢？ |My name is Ah Mei. What's yours?]
 
-**A:** 我叫阿明。 `ngo5 giu3 aa3 ming4`
-[audio:dialogue1-ming|我叫阿明。]
+[dialogue:A|dialogue1-ming|ngo5 giu3 aa3 ming4|我叫阿明。| My name is Ah Ming]
 
 ---
 
 ## Dialogue 2
 
-**A:** 你好。請問，你叫乜嘢名？
-[audio:dialogue2-hello-ask-name|你好。請問，你叫乜嘢名？]
+[dialogue:A|dialogue2-hello-ask-name|nei5 hou2. cing2 man6, nei5 giu3 mat1 je5 meng2?|你好。請問，你叫乜嘢名？| Hello. Excuse me, what is your name?]
 
-**B:** 我叫陳小玲。
-[audio:dialogue2-my-name-is-siu-ling|我叫陳小玲。]
+[dialogue:B|dialogue2-my-name-is-siu-ling|ngo5 giu3 can4 siu2 ling4|我叫陳小玲。|My name is Siu-Ling]
 
-**A:** 好高興認識你。
-[audio:dialogue2-nice-to-meet-you|好高興認識你。]
+[dialogue:A|dialogue2-nice-to-meet-you|hou2 gou1 hing3 jing6 sik1 nei5|好高興認識你。| Nice to meet you]
 
-**B:** 我都好高興認識你。
-[audio:dialogue2-me-too|我都好高興認識你。]
-
+[dialogue:B|dialogue2-me-too|ngo5 dou1 hou2 gou1 hing3 jing6 sik1 nei5|我都好高興認識你。| Nice to meet you too]
 ---
 
 ## Key Patterns
