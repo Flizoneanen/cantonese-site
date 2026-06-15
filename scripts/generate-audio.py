@@ -14,7 +14,7 @@ VOCAB_DIR = PROJECT_ROOT / "data" / "vocab"
 AUDIO_DIR = PROJECT_ROOT / "public" / "audio"
 LESSON_TEXT_DIR = PROJECT_ROOT / "data" / "lesson-text"
 AUDIO_PATTERN = re.compile(r"\[audio:([^|\]]+)\|([^\]]+)\]")
-DIALOGUE_PATTERN = re.compile(r"\[dialogue:([^|\]]+)\|([^|\]]+)\|([^|\]]+)\|([^\]]+)\]")
+DIALOGUE_PATTERN = re.compile(r"\[dialogue:([^|\]]+)\|([^|\]]+)\|([^|\]]+)\|([^|\]]+)\|([^\]]+)\]")
 
 
 def generate_audio(text: str, output_path: Path, voice: str = DEFAULT_VOICE) -> None:
@@ -74,10 +74,10 @@ def generate_audio_from_markdown(md_path: Path) -> None:
 
     dialogue_matches = DIALOGUE_PATTERN.findall(content)
 
-    for speaker, file_name, _jyutping, text in dialogue_matches:
+    for speaker, file_name, _jyutping, cantonese_text, _english in dialogue_matches:
         output_path = AUDIO_DIR / lesson_slug / f"{file_name}.mp3"
         voice = SPEAKER_VOICES.get(speaker.strip().upper(), DEFAULT_VOICE)
-        generate_audio(text.strip(), output_path, voice)
+        generate_audio(cantonese_text.strip(), output_path, voice)
 
 
 def main() -> None:
